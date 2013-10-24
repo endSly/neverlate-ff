@@ -1,18 +1,54 @@
 <!doctype html>
-<html>
+<html ng-app="app">
 <head>
   <title>Neverlate</title>
   <meta charset="utf-8">
   <link href="/styles/gaiabb/all.css" rel="stylesheet" type="text/css">
   <link href="/styles/main.css" rel="stylesheet" type="text/css">
-  <script defer src="/scripts/main.js"></script>
+  <script defer src="/scripts/vendor/angular.min.js"></script>
+  <script defer src="/scripts/vendor/underscore-min.js"></script>
 </head>
 <body>
-  <section role="region">
+<section id="index" data-position="current">  
+<section data-type="sidebar" ng-controller="AgenciesListCtrl">
   <header>
-    <h1>Neverlate</h1>
+    <menu type="toolbar">
+      <a href="#content"><span class="icon icon-add">add</span></a>
+    </menu>
+    <h1>Title <em>(9)</em></h1>
   </header>
+  <nav>
+
+    <h2>Subtitle</h2>
+        <ul>
+          <li ng-repeat="agency in agencies">
+            <a id="btn-action-menu" href="#" ng-click="loadAgency(agency)">
+              <p>{{ agency.agency_name }}</p>
+            </a>
+          </li>
+        </ul>
+  </nav>
   </section>
+  <section id="drawer" role="region" ng-controller="StopsListCtrl">
+    <header>
+      <a href="#content"><span class="icon icon-menu">hide sidebar</span></a>
+      <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
+      <h1>{{ agency.agency_name }}</h1>
+    </header>
+    <article class="content scrollable header">
+      <div data-type="list">
+        <ul>
+          <li ng-repeat="stop in rootStopsList">
+            <a id="btn-action-menu" href="#" ng-click="showStop(stop)">
+              <p>{{ stop.stop_name }}</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </section>
+</section>
 </body>
+  <script defer src="/scripts/main.js"></script>
 </html>
 
