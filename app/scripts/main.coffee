@@ -1,5 +1,7 @@
 'use strict'
 
+host = 'https://neverlate-service.herokuapp.com'
+
 this.app = app = angular.module('app', [])
 
 app.controller 'AppCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
@@ -13,7 +15,7 @@ app.controller 'AppCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope,
 ]
 
 app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) -> 
-  $http.jsonp('https://neverlate-service.herokuapp.com/api/v1/agencies?callback=JSON_CALLBACK')
+  $http.jsonp("#{ host }/api/v1/agencies?callback=JSON_CALLBACK")
     .success (agencies) -> $scope.agencies = agencies
   
   $scope.loadAgency = (agency) ->
@@ -29,7 +31,7 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
 
     $scope.agency = agency
     console.log agency
-    $http.jsonp("https://neverlate-service.herokuapp.com/api/v1/#{ agency.agency_key }/stops?callback=JSON_CALLBACK")
+    $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops?callback=JSON_CALLBACK")
     .success (stops) ->
       rootStopsList = $scope.rootStopsList = _.filter stops, (stop) -> stop.parent_station == '' or stop.parent_station == null
       rootStops = _.object _.pluck(rootStopsList, 'stop_id'), rootStopsList
@@ -40,9 +42,7 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
       _.each boardingStops, (stop) ->
         stop.distance = distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude)
         
-      if $rootScope.location
-        boardingStopsByLocation = _.sortBy boardingStops, 'distance'
-        console.log(boardingStopsByLocation)
+      $scope.boardingStopsByLocation = _.sortBy(boardingStops, 'distance') if $rootScope.location
 
       $scope.stops = stops
       console.log(rootStops)
@@ -55,7 +55,7 @@ app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $s
   $rootScope.$on 'stopShow', (ev, stop) ->
     agency = $rootScope.agency
 
-    $http.jsonp("https://neverlate-service.herokuapp.com/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
+    $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
     .success (stops) ->
 
 ]
