@@ -2,7 +2,13 @@
 
 this.app = app = angular.module('app', [])
 
-app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
+app.controller 'AppCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
+  watchId = navigator.geolocation.watchPosition (location) ->
+    $rootScope.location = location.coords
+    $rootScope.$emit 'locationChanged', location.coords
+]
+
+app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) -> 
   $http.jsonp('https://neverlate-service.herokuapp.com/api/v1/agencies?callback=JSON_CALLBACK')
     .success (agencies) -> $scope.agencies = agencies
   
@@ -15,6 +21,8 @@ app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope
 
 app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
   $rootScope.$on 'agencyChanged', (ev, agency) ->
+    $scope.rootStopsList = null
+
     $scope.agency = agency
     console.log agency
     $http.jsonp("https://neverlate-service.herokuapp.com/api/v1/#{ agency.agency_key }/stops?callback=JSON_CALLBACK")
