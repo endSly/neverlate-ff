@@ -15,7 +15,7 @@
       <menu type="toolbar">
         <a href="#content"><span class="icon icon-add">add</span></a>
       </menu>
-      <h1>Medios <em>({{ agencies.length }})</em></h1>
+      <h1>Agencias <em>({{ agencies.length }})</em></h1>
     </header>
     <nav>
       <ul>
@@ -36,9 +36,10 @@
       <article class="content scrollable header">
         <div data-type="list">
           <ul>
-            <li ng-repeat="stop in rootStopsList">
+            <li ng-repeat="stop in stopsList">
               <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
                 <p>{{ stop.stop_name }}</p>
+                <span>{{ stop.distance }}</span>
               </a>
             </li>
           </ul>
