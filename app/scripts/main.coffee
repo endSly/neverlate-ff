@@ -30,7 +30,7 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     $scope.rootStopsList = null
 
     $scope.agency = agency
-    console.log agency
+
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops?callback=JSON_CALLBACK")
     .success (stops) ->
       rootStopsList = $scope.rootStopsList = _.filter stops, (stop) -> stop.parent_station == '' or stop.parent_station == null
@@ -54,9 +54,12 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
 app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
   $rootScope.$on 'stopShow', (ev, stop) ->
     agency = $rootScope.agency
+    $scope.stop = stop
 
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
-    .success (stops) ->
+    .success (departures) ->
+      $scope.departures = departures = _.sortBy dapartures, (dep) -> dep.departure_time = Date.parse(dep.departure_time)
+      
 
 ]
 
@@ -68,7 +71,6 @@ distance = (lat1, lon1, lat2, lon2) ->
   radlat2 = degToRad * lat2
   radlon1 = degToRad * lon1
   radlon2 = degToRad * lon2
-  radtheta = radlon1 - radlon2
-  dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+  dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radlon1 - radlon2)
   Math.acos(dist) * 111.18957696 / degToRad
 

@@ -9,53 +9,60 @@
   <script defer src="/scripts/vendor/underscore-min.js"></script>
 </head>
 <body ng-controller="AppCtrl">
-<section id="index" data-position="current">  
-<section data-type="sidebar" ng-controller="AgenciesListCtrl">
-  <header>
-    <menu type="toolbar">
-      <a href="#content"><span class="icon icon-add">add</span></a>
-    </menu>
-    <h1>Title <em>(9)</em></h1>
-  </header>
-  <nav>
-
-    <h2>Subtitle</h2>
-        <ul>
-          <li ng-repeat="agency in agencies">
-            <a id="btn-action-menu" href="#" ng-click="loadAgency(agency)">
-              <p>{{ agency.agency_name }}</p>
-            </a>
-          </li>
-        </ul>
-  </nav>
-  </section>
-  <section id="drawer" role="region" ng-controller="StopsListCtrl">
+  <section id="index" data-position="current" class="current">  
+  <section data-type="sidebar" data-position="current" ng-controller="AgenciesListCtrl">
     <header>
-      <a href="#content"><span class="icon icon-menu">hide sidebar</span></a>
-      <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
-      <h1>{{ agency.agency_name }}</h1>
+      <menu type="toolbar">
+        <a href="#content"><span class="icon icon-add">add</span></a>
+      </menu>
+      <h1>Medios <em>({{ agencies.length }})</em></h1>
+    </header>
+    <nav>
+      <ul>
+        <li ng-repeat="agency in agencies">
+          <a id="btn-action-menu" href="#" ng-click="loadAgency(agency)">
+            <p>{{ agency.agency_name }}</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    </section>
+    <section id="drawer" role="region" data-position="current" ng-controller="StopsListCtrl">
+      <header>
+        <a href="#content"><span class="icon icon-menu">hide sidebar</span></a>
+        <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
+        <h1>{{ agency.agency_name }}</h1>
+      </header>
+      <article class="content scrollable header">
+        <div data-type="list">
+          <ul>
+            <li ng-repeat="stop in rootStopsList">
+              <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
+                <p>{{ stop.stop_name }}</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </section>
+  <section id="stop-show" role="region" class="right" data-position="right" ng-controller="StopShowCtrl">
+    <header class="fixed">
+      <a id="btn-scrolling-back" href="#"><span class="icon icon-back">back</span></a>
+      <h1>{{ stop.stop_name }}</h1>
     </header>
     <article class="content scrollable header">
       <div data-type="list">
         <ul>
-          <li ng-repeat="stop in rootStopsList">
-            <a id="btn-action-menu" href="#" ng-click="showStop(stop)">
-              <p>{{ stop.stop_name }}</p>
+          <li ng-repeat="dep in departures">
+            <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
+              <p>{{ dep.departure_time }}</p>
             </a>
           </li>
         </ul>
       </div>
     </article>
   </section>
-  <section role="region" id="scrolling" data-position="right" ng-controller="StopShowCtrl">
-    <header class="fixed">
-      <a id="btn-scrolling-back" href="#"><span class="icon icon-back">back</span></a>
-      <h1>Scrolling</h1>
-    </header>
-    <article class="content scrollable header">
-    </article>
-  </section>
-</section>
 </body>
   <script defer src="/scripts/main.js"></script>
 </html>
