@@ -228,7 +228,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', 'Build app for release', [
-    'jshint',
+ //   'jshint',
     'clean:build',
     'cssmin',
     'sass:release',
@@ -256,7 +256,7 @@ module.exports = function (grunt) {
   grunt.registerTask('server', 'Launch local server', function (target) {
     if (target === 'test') {
       grunt.task.run([
-        'jshint',
+ //       'jshint',
         'clean:server',
         'sass:dev',
         'connect:test:keepalive'
@@ -264,7 +264,7 @@ module.exports = function (grunt) {
     }
     else {
       grunt.task.run([
-        'jshint',
+ //       'jshint',
         'clean:server',
         'cssmin',
         'sass:dev',

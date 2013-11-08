@@ -26,9 +26,8 @@ app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope
 ]
 
 app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
-
   loadStops = (stops) ->
-    stopsList = $scope.stopsList = _.filter stops, (stop) -> stop.parent_station == undefined
+    stopsList = $scope.stopsList = _.filter stops, (stop) -> !stop.parent_station
     stopsHash = _.object _.pluck(stops, 'stop_id'), stops
     
     # Build Stops tree
@@ -37,24 +36,22 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
         stopsHash[stop.parent_station].child_stations ||= []
         stopsHash[stop.parent_station].child_stations.push stop
       
-    console.log $scope.stopsList,   stops
+    $scope.stopsList = stopsList
 
-    #boardingStops = _.where(stops, location_type: 2)
-    #boardingStops = _.where(stops, location_type: 0) if _.isEmpty boardingStops
-      
     # Sort Stops by location
-    #if $rootScope.location
-    #  _.each boardingStops, (stop) ->
-    #    stop.distance = distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude)
-    #  $scope.boardingStopsByLocation = _.sortBy(boardingStops, 'distance')
-      
-    # Sort Stops alphabetically
-    #$scope.boardingStopsAlphabetically = _.sortBy(boardingStops, 'stop_name')
-
-
-    #$scope.stops = stops
-
-
+    $rootScope.$on 'locationChanged', updateDistances
+    
+    updateDistances = ->
+      _.each $scope.stopsList, (stop) ->
+        stop.distance = if $rootScope.location then distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude) else null
+        
+      if $rootScope.location 
+        $scope.stopsList = _.sortBy($scope.stopsList, 'distance')
+      else
+        # Sort Stops alphabetically
+        $scope.stopsList = _.sortBy($scope.stopsList, 'stop_name') unless $rootScope.location 
+    
+    updateDistances()
 
   $rootScope.$on 'agencyChanged', (ev, agency) ->
     $scope.agency = agency
@@ -64,6 +61,7 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops?callback=JSON_CALLBACK").success loadStops
 
   $scope.showStop = (stop) ->
+    stop = _.findWhere(stop.child_stations, location_type: 0) or stop if stop.child_stations
     $rootScope.$emit('stopShow', stop)
 ]
 
@@ -74,7 +72,7 @@ app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $s
     console.log stop
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
     .success (departures) ->
-      $scope.departures = departures = _.sortBy departures, (dep) -> dep.departure_time = Date.parse(dep.departure_time)
+      $scope.departures = departures = _.sortBy departures, (dep) -> dep.departure_date = new Date(dep.departure_date)
       console.log departures
 
 ]

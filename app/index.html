@@ -33,13 +33,13 @@
         <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
         <h1>{{ agency.agency_name }}</h1>
       </header>
-      <article class="content scrollable header">
+      <article class="content scrollable">
         <div data-type="list">
           <ul>
             <li ng-repeat="stop in stopsList">
               <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
                 <p>{{ stop.stop_name }}</p>
-                <span>{{ stop.distance }}</span>
+                <p ng-if="stop.distance">{{ stop.distance.toFixed(2) }} Km</p>
               </a>
             </li>
           </ul>
@@ -52,12 +52,13 @@
       <a id="btn-scrolling-back" href="#"><span class="icon icon-back">back</span></a>
       <h1>{{ stop.stop_name }}</h1>
     </header>
-    <article class="content scrollable header">
+    <article class="content scrollable">
       <div data-type="list">
         <ul>
           <li ng-repeat="dep in departures">
             <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
-              <p>{{ dep.departure_time }}</p>
+              <p>{{ dep.departure_date }}</p>
+              <p>{{ dep.trip_headsign }}</p>
             </a>
           </li>
         </ul>
