@@ -5,11 +5,10 @@ host = 'https://neverlate-service.herokuapp.com'
 this.app = app = angular.module('app', [])
 
 app.controller 'AppCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
-  
   $rootScope._ = _
-  
+
   watchId = navigator.geolocation.watchPosition (location) ->
-    console.log(location)
+    console.log location
     $rootScope.location = location.coords
     $rootScope.$emit 'locationChanged', location.coords
 ]
@@ -42,14 +41,15 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     $rootScope.$on 'locationChanged', updateDistances
     
     updateDistances = ->
-      _.each $scope.stopsList, (stop) ->
-        stop.distance = if $rootScope.location then distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude) else null
+      console.log "Update dist"
+      if $rootScope.location
+        _.each $scope.stopsList, (stop) ->
+          stop.distance = distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude)
         
-      if $rootScope.location 
         $scope.stopsList = _.sortBy($scope.stopsList, 'distance')
       else
         # Sort Stops alphabetically
-        $scope.stopsList = _.sortBy($scope.stopsList, 'stop_name') unless $rootScope.location 
+        $scope.stopsList = _.sortBy($scope.stopsList, 'stop_name') unless $rootScope.location
     
     updateDistances()
 
