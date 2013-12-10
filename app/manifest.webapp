@@ -4,6 +4,7 @@
   "launch_path": "/index.html#drawer",
   "icons": {
     "60": "/icons/60x60.png",
+    "90": "/icons/90x90.png",
     "120": "/icons/120x120.png",
     "128": "/icons/128x128.png"
   },
