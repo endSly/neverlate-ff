@@ -1,6 +1,6 @@
 {
   "name": "Neverlate",
-  "description": "An awesome Firefox OS app",
+  "description": "Los paneles del Metro de Bilbao, Bilbobus y Bizkaibus a tu alcance desde el móvil",
   "launch_path": "/index.html",
   "icons": {
     "60": "/icons/60x60.png",
@@ -11,6 +11,6 @@
     "name": "endSly",
     "url": "https://github.com/endSly"
   },
-  "default_locale": "en"
+  "default_locale": "es"
 }
 

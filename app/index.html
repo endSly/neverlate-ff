@@ -49,7 +49,7 @@
   </section>
   <section id="stop-show" role="region" class="right" data-position="right" ng-controller="StopShowCtrl">
     <header class="fixed">
-      <a id="btn-scrolling-back" href="#"><span class="icon icon-back">back</span></a>
+      <a id="btn-scrolling-back" href="#" style="display: block;"><span class="icon icon-back">back</span></a>
       <h1>{{ stop.stop_name }}</h1>
     </header>
     <article class="content scrollable">
@@ -57,7 +57,7 @@
         <ul>
           <li ng-repeat="dep in departures">
             <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
-              <p>{{ timeRemaining(dep.departure_date) }}</p>
+              <p>{{ timeRemaining(dep.departure_date) }} min</p>
               <p>{{ dep.trip_headsign }}</p>
             </a>
           </li>

@@ -25,6 +25,8 @@ app.controller 'AgenciesListCtrl', ['$rootScope', '$scope', '$http', ($rootScope
 ]
 
 app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
+  $scope.stopsList = []
+
   loadStops = (stops) ->
     stopsList = $scope.stopsList = _.filter stops, (stop) -> !stop.parent_station
     stopsHash = _.object _.pluck(stops, 'stop_id'), stops
@@ -41,7 +43,6 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     $rootScope.$on 'locationChanged', updateDistances
     
     updateDistances = ->
-      console.log "Update dist"
       if $rootScope.location
         _.each $scope.stopsList, (stop) ->
           stop.distance = distance(stop.loc[1], stop.loc[0], $rootScope.location.latitude,  $rootScope.location.longitude)
@@ -52,8 +53,6 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
         $scope.stopsList = _.sortBy($scope.stopsList, 'stop_name') unless $rootScope.location
     
     updateDistances()
-
-  $http.jsonp("#{ host }/api/v1/metrobilbao/stops?callback=JSON_CALLBACK").success loadStops
 
   $rootScope.$on 'agencyChanged', (ev, agency) ->
     $scope.agency = agency
@@ -67,19 +66,22 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     $rootScope.$emit('stopShow', stop)
 ]
 
-app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $scope, $http) ->
+app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', '$timeout', ($rootScope, $scope, $http, $timeout) ->
   $rootScope.$on 'stopShow', (ev, stop) ->
     agency = $rootScope.agency
     $scope.stop = stop
-    console.log stop
+
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
     .success (departures) ->
       $scope.departures = departures = _.sortBy departures, (dep) -> dep.departure_date = new Date(dep.departure_date)
       $scope.timeRemaining = (date) ->
-        console.log date
-        console.log date - new Date
         Math.round((date - new Date) / 60000)
-      console.log departures
+
+      $scope.onTimeout = ->
+        departures = _.filter departures, (dep) -> dep.departure_date > new Date()
+        $scope.departures = departures
+        timeout = $timeout($scope.onTimeout,1000)
+      timeout = $timeout($scope.onTimeout,1000)
 
 ]
 
