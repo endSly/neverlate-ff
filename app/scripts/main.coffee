@@ -1,6 +1,6 @@
 'use strict'
 
-host = 'https://neverlate-service.herokuapp.com'
+host = 'https://neverlate-es-bizkaia.herokuapp.com'
 
 this.app = app = angular.module('app', [])
 
@@ -53,6 +53,8 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
     
     updateDistances()
 
+  $http.jsonp("#{ host }/api/v1/metrobilbao/stops?callback=JSON_CALLBACK").success loadStops
+
   $rootScope.$on 'agencyChanged', (ev, agency) ->
     $scope.agency = agency
 
@@ -73,6 +75,10 @@ app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $s
     $http.jsonp("#{ host }/api/v1/#{ agency.agency_key }/stops/#{ stop.stop_id }/next-departures?callback=JSON_CALLBACK")
     .success (departures) ->
       $scope.departures = departures = _.sortBy departures, (dep) -> dep.departure_date = new Date(dep.departure_date)
+      $scope.timeRemaining = (date) ->
+        console.log date
+        console.log date - new Date
+        Math.round((date - new Date) / 60000)
       console.log departures
 
 ]

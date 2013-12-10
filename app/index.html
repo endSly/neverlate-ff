@@ -57,7 +57,7 @@
         <ul>
           <li ng-repeat="dep in departures">
             <a class="action-menu" href="#stop-show" ng-click="showStop(stop)">
-              <p>{{ dep.departure_date }}</p>
+              <p>{{ timeRemaining(dep.departure_date) }}</p>
               <p>{{ dep.trip_headsign }}</p>
             </a>
           </li>
