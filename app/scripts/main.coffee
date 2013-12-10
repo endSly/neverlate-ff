@@ -67,7 +67,13 @@ app.controller 'StopsListCtrl', ['$rootScope', '$scope', '$http', ($rootScope, $
 ]
 
 app.controller 'StopShowCtrl', ['$rootScope', '$scope', '$http', '$timeout', ($rootScope, $scope, $http, $timeout) ->
+  $scope.departures = []
   $rootScope.$on 'stopShow', (ev, stop) ->
+    $('section').removeClass("current")
+    $('#stop-show').addClass("current")
+    $('#stop-show').attr('data-position', 'current')
+    $('#stop-show').css('transform', 'translateX(0%)')
+
     agency = $rootScope.agency
     $scope.stop = stop
 

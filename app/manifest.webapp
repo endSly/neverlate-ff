@@ -1,7 +1,7 @@
 {
   "name": "Neverlate",
   "description": "Los paneles del Metro de Bilbao, Bilbobus y Bizkaibus a tu alcance desde el móvil",
-  "launch_path": "/index.html",
+  "launch_path": "/index.html#drawer",
   "icons": {
     "60": "/icons/60x60.png",
     "120": "/icons/120x120.png",
